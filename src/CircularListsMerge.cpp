@@ -32,30 +32,81 @@ struct node{
 	int data;
 	struct node *next;
 };
+struct node **merge1_circularlists(struct node **head1, struct node **head2);
 int merge_circularlists(struct node **head1, struct node **head2){
 	//Returns Length of merged Sorted circular SLL and also points *head1 to final SLL .
 	if (*head1==NULL&&*head2==NULL)
 	return -1;
-    struct node **t1, **t2,**r;
+    struct node **t1, **t2,**r,**head;
 	t1 = (node ** )malloc(sizeof(struct node ** ));
 	t2 = (node **)malloc(sizeof(struct node **));
 	r = (node **)malloc(sizeof(struct node **));
 	int i=0, j=0,l=0;
 	t1 = head1;
 	t2 =head2;
+	head = head1;
 	while (t1->next != head1&& t2->next != head2)
 	{
 		if (t1->data < t2->data)
 		{
-			r = merge_circularlists(t1->next, t2);
+			r = merge1_circularlists(t1->next, t2);
 		}
 		if (t2->data < t1->data)
 		{
-			r = merge_circularlists(t1, t2->next);
+			r = merge1_circularlists(t1, t2->next);
 		}
 		if (t1->data == t2->data)
 		{
-			r = merge_circularlists(t1->next, t2->next);
+			r = merge1_circularlists(t1->next, t2->next);
 		}
 	}
+	while (t1->next == head1&&t2->next != head2)
+	{
+		r = merge1_circularlists(t1, t2->next);
+	}
+	while (t1->next != head1&&t2->next == head2)
+	{
+		r = merge1_circularlists(t1->next, t2);
+	}
+	while (r->next != head)
+	{
+		l++;
+		r = r->next;
+	}
+
+}
+struct node **merge1_circularlists(struct node **head1, struct node **head2)
+{
+	
+	struct node **t1, **t2, **r;
+	t1 = (node **)malloc(sizeof(struct node **));
+	t2 = (node **)malloc(sizeof(struct node **));
+	r = (node **)malloc(sizeof(struct node **));
+	int i = 0, j = 0, l = 0;
+	t1 = head1;
+	t2 = head2;
+	while (t1->next != head1&& t2->next != head2)
+	{
+		if (t1->data < t2->data)
+		{
+			r = merge1_circularlists(t1->next, t2);
+		}
+		if (t2->data < t1->data)
+		{
+			r = merge1_circularlists(t1, t2->next);
+		}
+		if (t1->data == t2->data)
+		{
+			r = merge1_circularlists(t1->next, t2->next);
+		}
+	}
+	while (t1->next == head1&&t2->next != head2)
+	{
+		r = merge1_circularlists(t1, t2->next);
+	}
+	while (t1->next != head1&&t2->next == head2)
+	{
+		r = merge1_circularlists(t1->next, t2);
+	}
+	return r;
 }
